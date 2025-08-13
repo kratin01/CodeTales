@@ -32,12 +32,11 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-retry every 5 seconds if dashboardData is null
   useEffect(() => {
     if (!dashboardData) {
       const retryTimer = setTimeout(() => {
         fetchDashboardData();
-      }, 5000); // Retry after 5 seconds
+      }, 2000); // Retry after 2 seconds
 
       return () => clearTimeout(retryTimer); // Cleanup timer
     }
@@ -95,7 +94,7 @@ const Dashboard = () => {
           <table className="w-full text-sm text-gray-500">
             <thead className="text-xs text-gray-600 text-left uppercase">
               <tr>
-                <th scope="col" className="px-2 py-4 xl:px-6">
+                <th scope="col" className="px-2 py-4 xl:px-6 w-12 text-center">
                   #
                 </th>
                 <th scope="col" className="px-2 py-4">
