@@ -1,3 +1,5 @@
+// server.js (CORRECTED)
+
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
@@ -7,12 +9,17 @@ import blogRouter from "./routes/blogRoutes.js";
 
 const app = express();
 
-// Connect DB
-await connectDB();
-
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Middleware to connect to DB on each API request
+// This will use the cached connection from db.js
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
+
 
 // Routes
 app.use("/api/admin", adminRouter);
@@ -23,6 +30,7 @@ app.get("/", (req, res) => {
 });
 
 
+// This part for local development is fine and does not need to be changed.
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
