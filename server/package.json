@@ -19,7 +19,7 @@
     "express": "^5.1.0",
     "imagekit": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mogoose": "^0.0.1-security",
+    
     "mongoose": "^8.15.2",
     "multer": "^2.0.2"
   },
