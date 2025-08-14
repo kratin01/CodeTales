@@ -5,6 +5,7 @@ import BlogList from "../component/BlogList";
 import Newsletter from "../component/Newsletter";
 import Footer from "../component/Footer";
 import { useAppContext } from "../context/AppContext";
+import ShimmerUI from "../component/ShimmerUI_BlogList";
 
 const Home = () => {
   const { blogs } = useAppContext();
@@ -20,7 +21,7 @@ const Home = () => {
     <div>
       <Navbar />
       <Header />
-      <BlogList />
+      {loading ? <ShimmerUI /> : <BlogList />}
       <Newsletter />
       <Footer />
     </div>
