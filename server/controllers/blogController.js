@@ -1,4 +1,3 @@
-// server/controllers/blogController.js
 import fs from "fs";
 import imagekit from "../configs/imageKit.js";
 import Blog from "../models/Blog.js";
@@ -34,7 +33,7 @@ export const addBlog = async (req, res) => {
       ],
     });
 
-    await Blog.create({
+    const newBlog = await Blog.create({
       title,
       subTitle,
       description,
@@ -43,9 +42,11 @@ export const addBlog = async (req, res) => {
       isPublished,
     });
 
-    res
-      .status(201)
-      .json({ success: true, message: "Blog created successfully" });
+    res.status(201).json({
+      success: true,
+      message: "Blog created successfully",
+      blog: newBlog,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({

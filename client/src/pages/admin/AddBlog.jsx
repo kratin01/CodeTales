@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
-import "quill/dist/quill.snow.css"; // ✅ make content visible
+import "quill/dist/quill.snow.css";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AddBlog = () => {
-  const { axios } = useAppContext(); // assuming axios is pre-configured with auth headers
+  const { axios, setBlogs, navigate } = useAppContext();
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -85,7 +86,7 @@ const AddBlog = () => {
     try {
       setIsAdding(true);
 
-      const description = quillRef.current.root.innerHTML; // ✅ HTML ready to store
+      const description = quillRef.current.root.innerHTML;
 
       const blog = {
         title,
@@ -104,6 +105,13 @@ const AddBlog = () => {
       if (data.success) {
         toast.success(data.message || "Blog created");
 
+        // Update blogs state with the new blog
+        if (data.blog) {
+          setBlogs((prevBlogs) => [...prevBlogs, data.blog]);
+        } else {
+          toast.error("Blog data not returned from server");
+        }
+
         // Reset form
         setImage(null);
         setTitle("");
@@ -111,6 +119,9 @@ const AddBlog = () => {
         quillRef.current.setText("");
         setCategory(blogCategories?.[0] || "Startup");
         setIsPublished(false);
+
+        // Navigate to homepage
+        navigate("/");
       } else {
         toast.error(data.message || "Failed to add blog");
       }
@@ -193,7 +204,7 @@ const AddBlog = () => {
           onChange={(e) => setCategory(e.target.value)}
           value={category}
           name="category"
-          className="mt-2 px-3 py-2 border text-gray-500 border-gray-300 rounded outline-none"
+          className="mt-2 px-3 py-2 border text-gray-600 border-gray-300 rounded outline-none"
         >
           <option value="">Select category</option>
           {blogCategories.map((item, index) => (
