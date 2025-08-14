@@ -21,9 +21,7 @@ const Footer = () => {
             </span>
           </div>
           <p className="max-w-[410px] mt-6">
-            CodeTales is your go-to platform for sharing stories, insights, and
-            ideas. Discover engaging content, connect with passionate writers,
-            and join a vibrant blogging community.
+            This is your space to dive into my thoughts, stories, and ideas. I write freely and without filters, inviting you to explore everything from a single word to a thousand. If something resonates with you, feel free to add your comments—your voice matters, and together we can connect through the stories that start right here.
           </p>
         </div>
         <div className="flex flex-wrap justify-between w-full md:w-[45%] gap-5">
