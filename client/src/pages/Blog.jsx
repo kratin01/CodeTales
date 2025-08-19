@@ -16,6 +16,7 @@ const Blog = () => {
   const [comments, setComments] = useState([]);
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchBlog = async () => {
     try {
@@ -37,25 +38,35 @@ const Blog = () => {
 
   const addComment = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
-      const { data } = await axios.post(`api/blog/add-comment`, {
+      const { data } = await axios.post(`/api/blog/add-comment`, {
         blogId: id,
         name,
         content,
       });
 
       if (data.success) {
-        toast.success(
-          `Thankyou ${name}, your comment has been added for review`
-        );
-        setName("");
-        setContent("");
-        fetchComments();
+        // wait 3 seconds before showing toast + clearing form
+        setTimeout(() => {
+          toast.success(
+            `Thank you ${name}, your comment has been added for review`
+          );
+          setName("");
+          setContent("");
+          fetchComments();
+          setIsSubmitting(false); // allow new submit after delay
+        }, 3000);
       } else {
         toast.error(data.message);
+        setIsSubmitting(false);
       }
     } catch (error) {
       toast.error(error.message);
+      setIsSubmitting(false);
     }
   };
 
@@ -152,9 +163,14 @@ const Blog = () => {
             ></textarea>
             <button
               type="submit"
-              className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors duration-200"
+              disabled={isSubmitting}
+              className={`w-full py-3 rounded-lg transition-colors duration-200 ${
+                isSubmitting
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primary hover:bg-primary-dark text-white"
+              }`}
             >
-              Submit Comment
+              {isSubmitting ? "Submitting..." : "Submit Comment"}
             </button>
           </form>
         </div>
