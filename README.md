@@ -10,27 +10,27 @@
 ## 📸 Screenshots
 
 <table>
-  <tr>
-    <td align="center">
-      <b>Homepage</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./client/public/Main_page.png" alt="Homepage" width="100%">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <br>
-      <b>Dashboard</b>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="./client/public/Dashboard_page.png" alt="Dashboard" height="300">
-    </td>
-  </tr>
+  <tr>
+    <td align="center">
+      <b>Homepage</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/kratin01/CodeTales/main/client/public/Main_page.png" alt="Homepage" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <br>
+      <b>Dashboard</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/kratin01/CodeTales/main/client/public/Dashboard_page.png" alt="Dashboard" height="300">
+    </td>
+  </tr>
 </table>
 
 ## ✨ Features
