@@ -17,7 +17,7 @@
   </tr>
   <tr>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/kratin01/CodeTales/main/client/public/Main_page.png" alt="Homepage" width="100%">
+      <img src="https://raw.githubusercontent.com/kratin01/CodeTales/main/client/public/Main_Page.png" alt="Homepage" width="100%">
     </td>
   </tr>
   <tr>
