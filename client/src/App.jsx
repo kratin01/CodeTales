@@ -8,13 +8,14 @@ import AddBlog from "./pages/admin/AddBlog";
 import ListBlog from "./pages/admin/ListBlog";
 import Comments from "./pages/admin/Comments";
 import Login from "./component/admin/Login";
+import UserDashboard from "./pages/UserDashboard";
 import "quill/dist/quill.snow.css";
 
 import { Toaster } from "react-hot-toast";
 import { useAppContext } from "./context/AppContext";
 
 const App = () => {
-  const { token } = useAppContext();
+  const { token, role } = useAppContext();
   return (
     <div>
       <Toaster />
@@ -24,7 +25,9 @@ const App = () => {
         {/* `:id` is a dynamic URL parameter act as a placeholder any value in this position will match and render the same route */}
         <Route path="/blog/:id" element={<Blog />} />
 
-        <Route path="/admin" element={token ? <Layout /> : <Login />}>
+        <Route path="/login" element={<Login mode="user" />} />
+        <Route path="/dashboard" element={token && role !== 'admin' ? <UserDashboard /> : <Login mode="user" />} />
+        <Route path="/admin" element={token && role === 'admin' ? <Layout /> : <Login mode="admin" />}>
           <Route index element={<Dashboard />} />
           <Route path="addBlog" element={<AddBlog />} />
           <Route path="listBlog" element={<ListBlog />} />

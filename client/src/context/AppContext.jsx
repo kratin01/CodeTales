@@ -14,6 +14,8 @@ export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const [token, setToken] = useState(null);
+  const [role, setRole] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [input, setInput] = useState("");
 
@@ -35,16 +37,34 @@ export const AppProvider = ({ children }) => {
     const token = localStorage.getItem("token");
     if (token) {
       setToken(token);
-      //so this token is now available for all axios requests
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        setRole(payload.role || null);
+      } catch (_) {}
     }
   }, []);
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        if (!token) return;
+        const { data } = await axios.get('/api/auth/me');
+        if (data.success) setCurrentUser(data.user);
+      } catch (_) {}
+    };
+    fetchMe();
+  }, [token]);
 
   const value = {
     axios,
     navigate,
     token,
     setToken,
+    role,
+    setRole,
+    currentUser,
+    setCurrentUser,
     blogs,
     setBlogs,
     input,

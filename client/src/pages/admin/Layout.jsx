@@ -6,12 +6,14 @@ import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 
 const Layout = () => {
-  const { axios, setToken, navigate } = useAppContext();
+  const { axios, setToken, navigate, setRole, setCurrentUser } = useAppContext();
 
   const logout = () => {
     localStorage.removeItem("token");
     axios.defaults.headers.common["Authorization"] = null;
     setToken(null);
+    setRole(null);
+    setCurrentUser(null);
     navigate("/");
     toast.success("Logged out successfully");
   };

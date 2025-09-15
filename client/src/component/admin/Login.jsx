@@ -5,8 +5,8 @@ import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 
-const Login = () => {
-  const { axios, setToken } = useAppContext();
+const Login = ({ mode = "user" }) => {
+  const { axios, setToken, navigate } = useAppContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,15 +15,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/admin/login", {
+      const endpoint = mode === "admin" ? "/api/admin/login" : "/api/auth/login";
+      const { data } = await axios.post(endpoint, {
         email,
         password,
       });
       if (data.success) {
         setToken(data.token);
         localStorage.setItem("token", data.token);
-        axios.defaults.headers.common["Authorization"] = data.token;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
         toast.success("Login successful!");
+        // Decode role from JWT to route appropriately
+        try {
+          const payload = JSON.parse(atob(data.token.split(".")[1]));
+          const role = payload.role;
+          if (role === "admin") navigate("/admin");
+          else navigate("/dashboard");
+        } catch (_) {
+          navigate("/");
+        }
       } else {
         toast.error(data.message);
       }
@@ -38,10 +48,18 @@ const Login = () => {
         <div className="flex flex-col items-center justify-center">
           <div className="w-full py-6 text-center">
             <h1 className="text-3xl font-bold">
-              <span className="text-primary">Admin</span> Login
+              {mode === "admin" ? (
+                <>
+                  <span className="text-primary">Admin</span> Login
+                </>
+              ) : (
+                <>Login</>
+              )}
             </h1>
             <p className="font-light">
-              Enter your credentials to access the admin panel
+              {mode === "admin"
+                ? "Enter your credentials to access the admin panel"
+                : "Enter your credentials to continue"}
             </p>
           </div>
           <form
