@@ -3,18 +3,9 @@ import { assets } from "../../assets/assets";
 import { Outlet } from "react-router";
 import Sidebar from "../../component/admin/Sidebar"
 import { useAppContext } from "../../context/AppContext";
-import toast from "react-hot-toast";
 
 const Layout = () => {
-  const { axios, setToken, navigate } = useAppContext();
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    axios.defaults.headers.common["Authorization"] = null;
-    setToken(null);
-    navigate("/");
-    toast.success("Logged out successfully");
-  };
+  const { logout, navigate } = useAppContext();
 
   return (
     <>
