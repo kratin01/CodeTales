@@ -14,6 +14,7 @@ export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [input, setInput] = useState("");
 
@@ -29,14 +30,111 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // Fetch user profile when token exists
+  const fetchUserProfile = async (authToken) => {
+    try {
+      const { data } = await axios.get("/api/user/profile");
+      if (data.success) {
+        setUser(data.user);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+      // If token is invalid, clear it
+      if (error.response?.status === 401) {
+        logout();
+      }
+    }
+  };
+
+  // Logout function
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    axios.defaults.headers.common["Authorization"] = null;
+    setToken(null);
+    setUser(null);
+    navigate("/");
+    toast.success("Logged out successfully");
+  };
+
+  // Login function
+  const login = async (email, password, isAdmin = false) => {
+    try {
+      const endpoint = isAdmin ? "/api/admin/login" : "/api/user/login";
+      const { data } = await axios.post(endpoint, { email, password });
+      
+      if (data.success) {
+        setToken(data.token);
+        localStorage.setItem("token", data.token);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+        
+        // Store user data
+        if (data.user) {
+          setUser(data.user);
+          localStorage.setItem("user", JSON.stringify(data.user));
+        }
+        
+        toast.success("Login successful!");
+        return { success: true, user: data.user };
+      } else {
+        toast.error(data.message);
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message;
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
+    }
+  };
+
+  // Register function
+  const register = async (userData) => {
+    try {
+      const { data } = await axios.post("/api/user/register", userData);
+      
+      if (data.success) {
+        setToken(data.token);
+        localStorage.setItem("token", data.token);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+        
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        toast.success("Registration successful!");
+        return { success: true, user: data.user };
+      } else {
+        toast.error(data.message);
+        return { success: false, message: data.message };
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || error.message;
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
+    }
+  };
+
   useEffect(() => {
     fetchBlogs();
-    //now we have to check the token so we can protect the admin routes
-    const token = localStorage.getItem("token");
-    if (token) {
-      setToken(token);
-      //so this token is now available for all axios requests
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    
+    // Check for existing token and user data
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    
+    if (storedToken) {
+      setToken(storedToken);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
+      
+      if (storedUser) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (error) {
+          console.error("Failed to parse stored user data:", error);
+          localStorage.removeItem("user");
+        }
+      }
+      
+      // Fetch fresh user profile
+      fetchUserProfile(storedToken);
     }
   }, []);
 
@@ -45,10 +143,17 @@ export const AppProvider = ({ children }) => {
     navigate,
     token,
     setToken,
+    user,
+    setUser,
     blogs,
     setBlogs,
     input,
     setInput,
+    login,
+    register,
+    logout,
+    fetchBlogs,
+    fetchUserProfile,
   };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

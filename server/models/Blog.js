@@ -7,7 +7,17 @@ const blogSchema = new mongoose.Schema({
     category: { type: String, required: true },
     image: { type: String, required: true },
     isPublished: { type: Boolean, required: true },
+    author: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+        required: true
+    },
 }, { timestamps: true });
+
+// Index for better performance
+blogSchema.index({ author: 1 });
+blogSchema.index({ isPublished: 1 });
+blogSchema.index({ category: 1 });
 
 const Blog = mongoose.model('Blog', blogSchema);
 export default Blog;

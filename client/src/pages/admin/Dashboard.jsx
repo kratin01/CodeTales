@@ -52,14 +52,14 @@ const Dashboard = () => {
 
   return (
     <div className="flex-1 p-4 md:p-10 bg-blue-50/50">
-      <div className="flex flex-wrap gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="flex items-center gap-4 bg-white p-4 min-w-58 rounded shadow cursor-pointer hover:scale-105 transition-all">
           <img src={assets.dashboard_icon_32} alt="" className="w-9" />
           <div>
             <p className="text-xl font-semibold text-gray-600">
-              {dashboardData.blogs}
+              {dashboardData.blogs?.total || dashboardData.blogs || 0}
             </p>
-            <p className="text-gray-400 font-light">Blogs</p>
+            <p className="text-gray-400 font-light">Total Blogs</p>
           </div>
         </div>
 
@@ -67,7 +67,7 @@ const Dashboard = () => {
           <img src={assets.dashboard_icon_12} alt="" className="w-8" />
           <div>
             <p className="text-xl font-semibold text-gray-600">
-              {dashboardData.comments}
+              {dashboardData.comments || 0}
             </p>
             <p className="text-gray-400 font-light">Comments</p>
           </div>
@@ -77,12 +77,63 @@ const Dashboard = () => {
           <img src={assets.dashboard_icon22} alt="" className="w-10" />
           <div>
             <p className="text-xl font-semibold text-gray-600">
-              {dashboardData.drafts}
+              {dashboardData.blogs?.drafts || dashboardData.drafts || 0}
             </p>
             <p className="text-gray-400 font-light">Drafts</p>
           </div>
         </div>
+
+        <div className="flex items-center gap-4 bg-white p-4 min-w-58 rounded shadow cursor-pointer hover:scale-105 transition-all">
+          <img src={assets.user_icon} alt="" className="w-8" />
+          <div>
+            <p className="text-xl font-semibold text-gray-600">
+              {dashboardData.users?.total || 0}
+            </p>
+            <p className="text-gray-400 font-light">Total Users</p>
+          </div>
+        </div>
       </div>
+
+      {/* Additional User Stats */}
+      {dashboardData.users && (
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center gap-4 bg-white p-4 rounded shadow">
+            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+              <span className="text-green-600 text-sm font-bold">A</span>
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-gray-600">
+                {dashboardData.users.active || 0}
+              </p>
+              <p className="text-gray-400 font-light">Active Users</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 bg-white p-4 rounded shadow">
+            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+              <span className="text-purple-600 text-sm font-bold">AD</span>
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-gray-600">
+                {dashboardData.users.admins || 0}
+              </p>
+              <p className="text-gray-400 font-light">Admins</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 bg-white p-4 rounded shadow">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+              <span className="text-blue-600 text-sm font-bold">N</span>
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-gray-600">
+                {dashboardData.users.recent || 0}
+              </p>
+              <p className="text-gray-400 font-light">New Users (7 days)</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div>
         <div className="flex items-center gap-3 m-4 mt-6 text-gray-600">
